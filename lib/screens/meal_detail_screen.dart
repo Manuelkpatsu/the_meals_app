@@ -4,6 +4,11 @@ import '../dummy_data.dart';
 class MealDetailScreen extends StatelessWidget {
   static const routeName = '/meal-detail';
 
+  final Function toggleFavorite;
+  final Function isFavorite;
+
+  MealDetailScreen(this.toggleFavorite, this.isFavorite);
+
   Widget buildSectionTitle(String text, BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
@@ -58,8 +63,8 @@ class MealDetailScreen extends StatelessWidget {
                   return Card(
                     color: Theme.of(context).accentColor,
                     child: Padding(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
                       child: Text(ingredient),
                     ),
                   );
@@ -68,34 +73,28 @@ class MealDetailScreen extends StatelessWidget {
               ),
             ),
             buildSectionTitle('Steps', context),
-            buildContainer(
-              ListView.separated(
-                itemBuilder: (context, index) {
-                  String step = selectedMeal.steps[index];
+            buildContainer(ListView.separated(
+              itemBuilder: (context, index) {
+                String step = selectedMeal.steps[index];
 
-                  return ListTile(
-                    leading: CircleAvatar(
-                      child: Text('# ${(index + 1)}'),
-                    ),
-                    title: Text(
-                      step
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) => Divider(),
-                itemCount: selectedMeal.steps.length,
-              )
-            )
+                return ListTile(
+                  leading: CircleAvatar(
+                    child: Text('# ${(index + 1)}'),
+                  ),
+                  title: Text(step),
+                );
+              },
+              separatorBuilder: (context, index) => Divider(),
+              itemCount: selectedMeal.steps.length,
+            ))
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.delete
-        ),
-        onPressed: () {
-          Navigator.of(context).pop(mealId);
-        },
+        child: Icon(isFavorite(mealId)
+            ? Icons.favorite
+            : Icons.favorite_border_outlined),
+        onPressed: () => toggleFavorite(mealId),
       ),
     );
   }
